@@ -31,9 +31,9 @@ interface FaceDetection {
 
 const detections = {
   BLINK: { promptText: "Blink both eyes", minProbability: 0.4 },
-  TURN_HEAD_LEFT: { promptText: "Turn head left", maxAngle: -7.5 },
-  TURN_HEAD_RIGHT: { promptText: "Turn head right", minAngle: 7.5 },
-  NOD: { promptText: "Nod", minDiff: 1 },
+  TURN_HEAD_LEFT: { promptText: "Turn head left", maxAngle: 355 },//-7.5
+  TURN_HEAD_RIGHT: { promptText: "Turn head right", minAngle: 40 }, //7.5
+  NOD: { promptText: "Nod", minDiff: 400 }, //1
   SMILE: { promptText: "Smile", minProbability: 0.7 }
 }
 
@@ -45,11 +45,13 @@ const promptsText = {
 }
 
 const detectionsList: DetectionActions[] = [
+  
   "BLINK",
   "TURN_HEAD_LEFT",
   "TURN_HEAD_RIGHT",
-  "NOD",
-  "SMILE"
+  //"NOD",
+  "SMILE",
+  
 ]
 
 const initialState = {
@@ -69,8 +71,19 @@ export default function Liveness() {
   const rect = useRef<View>(null)
 
   useEffect(() => {
+
+    function shuffleArray(array: Array<[]> | any[]) {
+      for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+    shuffleArray(detectionsList)
+    console.log(detectionsList);
+    
+  
     const requestPermissions = async () => {
-      const { status } = await Camera.requestPermissionsAsync()
+      const { status } = await Camera.requestCameraPermissionsAsync()
       setHasPermission(status === "granted")
     }
 
@@ -101,10 +114,10 @@ export default function Liveness() {
     drawFaceRect(face)
     // make sure face is centered
     const faceMidYPoint = face.bounds.origin.y + midFaceOffsetY
-    console.log(`
-    face.bounds.origin.y: ${face.bounds.origin.y}
+    //console.log(`
+   // face.bounds.origin.y: ${face.bounds.origin.y}
 
-    `)
+  //  `)
     if (
       // if middle of face is outside the preview towards the top
       faceMidYPoint <= PREVIEW_MARGIN_TOP ||
@@ -170,24 +183,25 @@ export default function Liveness() {
         // If the difference between the current angle and the average is above threshold, pass.
         const diff = Math.abs(avgAngle - Math.abs(face.rollAngle))
 
-        // console.log(`
-        // avgAngle: ${avgAngle}
-        // rollAngle: ${face.rollAngle}
-        // diff: ${diff}
-        // `)
+        console.log(`
+        avgAngle: ${avgAngle}
+        rollAngle: ${face.rollAngle}
+        diff: ${diff}
+        `)
         if (diff >= detections.NOD.minDiff) {
           dispatch({ type: "NEXT_DETECTION", value: null })
         }
         return
       case "TURN_HEAD_LEFT":
-        // console.log("TURN_HEAD_LEFT " + face.yawAngle)
-        if (face.yawAngle <= detections.TURN_HEAD_LEFT.maxAngle) {
+        console.log("TURN_HEAD_LEFT " + face.yawAngle)
+        // if (face.yawAngle <= detections.TURN_HEAD_LEFT.maxAngle) {
+          if (face.yawAngle >= detections.TURN_HEAD_LEFT.maxAngle) {
           dispatch({ type: "NEXT_DETECTION", value: null })
         }
         return
       case "TURN_HEAD_RIGHT":
-        // console.log("TURN_HEAD_RIGHT " + face.yawAngle)
-        if (face.yawAngle >= detections.TURN_HEAD_RIGHT.minAngle) {
+        console.log("TURN_HEAD_RIGHT " + face.yawAngle)
+        if (face.yawAngle >= detections.TURN_HEAD_RIGHT.minAngle && face.yawAngle<=48 ) {
           dispatch({ type: "NEXT_DETECTION", value: null })
         }
         return
@@ -254,9 +268,9 @@ export default function Liveness() {
         type={Camera.Constants.Type.front}
         onFacesDetected={onFacesDetected}
         faceDetectorSettings={{
-          mode: FaceDetector.Constants.Mode.fast,
-          detectLandmarks: FaceDetector.Constants.Landmarks.none,
-          runClassifications: FaceDetector.Constants.Classifications.all,
+          mode: FaceDetector.FaceDetectorMode.fast,
+          detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
+          runClassifications: FaceDetector.FaceDetectorClassifications.none,
           minDetectionInterval: 0,
           tracking: false
         }}
