@@ -33,7 +33,7 @@ const detections = {
   BLINK: { promptText: "Blink both eyes", minProbability: 0.4 },
   TURN_HEAD_LEFT: { promptText: "Turn head left", maxAngle: 355 },//-7.5
   TURN_HEAD_RIGHT: { promptText: "Turn head right", minAngle: 40 }, //7.5
-  NOD: { promptText: "Nod", minDiff: 400 }, //1
+  NOD: { promptText: "Nod", minDiff: 1.5 }, //1
   SMILE: { promptText: "Smile", minProbability: 0.7 }
 }
 
@@ -49,7 +49,7 @@ const detectionsList: DetectionActions[] = [
   "BLINK",
   "TURN_HEAD_LEFT",
   "TURN_HEAD_RIGHT",
-  //"NOD",
+  "NOD",
   "SMILE",
   
 ]
@@ -188,7 +188,7 @@ export default function Liveness() {
         rollAngle: ${face.rollAngle}
         diff: ${diff}
         `)
-        if (diff >= detections.NOD.minDiff) {
+        if (diff >= detections.NOD.minDiff && diff <= 2) {
           dispatch({ type: "NEXT_DETECTION", value: null })
         }
         return
