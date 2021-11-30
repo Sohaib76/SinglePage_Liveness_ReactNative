@@ -1,6 +1,6 @@
 import * as FaceDetector from "expo-face-detector"
 import React, { useEffect, useReducer, useRef, useState } from "react"
-import { StyleSheet, Text, View, Dimensions, PixelRatio } from "react-native"
+import { StyleSheet, Text, View, Dimensions, PixelRatio, Image } from "react-native"
 import { Camera, FaceDetectionResult } from "expo-camera"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { useNavigation } from "@react-navigation/native"
@@ -367,6 +367,7 @@ export default function Liveness() {
         }}
       />
       <View style={styles.promptContainer}>
+       
         <Text style={styles.faceStatus}>
           {!state.faceDetected && promptsText.noFaceDetected}
         </Text>
@@ -378,6 +379,7 @@ export default function Liveness() {
             detections[state.detectionsList[state.currentDetectionIndex]]
               .promptText}
         </Text>
+        <Image style={{marginTop:30, alignSelf:'center', height:150, width:250}} source={require("../assets/login.png")}/>
       </View>
     </View>
   )
@@ -432,7 +434,7 @@ const CameraPreviewMask = (props: SvgProps) => (
       fillRule="evenodd"
       clipRule="evenodd"
       d="M150 0H0v300h300V0H150zm0 0c82.843 0 150 67.157 150 150s-67.157 150-150 150S0 232.843 0 150 67.157 0 150 0z"
-      fill="#fff"
+      fill="#000" //#fff
     />
   </Svg>
 )
@@ -442,7 +444,7 @@ const PREVIEW_SIZE = 300
 
 const styles = StyleSheet.create({
   actionPrompt: {
-    fontSize: 20,
+    fontSize: 15, //20
     textAlign: "center",
     color:'white'
   },
@@ -460,7 +462,7 @@ const styles = StyleSheet.create({
     backgroundColor:"rgb(0,0,0)"
   },
   faceStatus: {
-    fontSize: 24,
+    fontSize: 20, //24
     textAlign: "center",
     marginTop: 10,
     color:'white'
