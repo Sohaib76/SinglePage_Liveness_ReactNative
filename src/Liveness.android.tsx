@@ -307,7 +307,7 @@ export default function Liveness() {
           top: 0,
           width: "100%",
           height: PREVIEW_MARGIN_TOP,
-          backgroundColor: "white",
+          backgroundColor: "black", //white
           zIndex: 10
         }}
       />
@@ -318,7 +318,7 @@ export default function Liveness() {
           left: 0,
           width: (windowWidth - PREVIEW_SIZE) / 2,
           height: PREVIEW_SIZE,
-          backgroundColor: "white",
+          backgroundColor: "black", //white
           zIndex: 10
         }}
       />
@@ -329,7 +329,7 @@ export default function Liveness() {
           right: 0,
           width: (windowWidth - PREVIEW_SIZE) / 2 + 1,
           height: PREVIEW_SIZE,
-          backgroundColor: "white",
+          backgroundColor: "black", //white
           zIndex: 10
         }}
       />
@@ -362,7 +362,7 @@ export default function Liveness() {
         style={{
           position: "absolute",
           borderWidth: 2,
-          borderColor: "pink",
+          borderColor: "pink", //pink
           zIndex: 10
         }}
       />
